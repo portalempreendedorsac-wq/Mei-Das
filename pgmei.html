@@ -4,22 +4,22 @@
   <meta charset="UTF-8">
   <title>PGMEI - Programa Gerador de DAS</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
-    .header { background: #dcedc8; padding: 15px 30px; border-bottom: 3px solid #8bc34a; }
-    .logo { color: #2e7d32; font-weight: 900; font-size: 22px; display: flex; align-items: center; gap: 10px; }
-    .logo-box { background: #4caf50; color: white; padding: 2px 8px; border-radius: 4px; font-size: 16px; }
-    .sub { color: #555; font-size: 14px; margin-top: 5px; }
-    .container { max-width: 950px; margin: 20px auto; background: #fff; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
-    .info-bar { border: 1px solid #ddd; padding: 12px; margin-bottom: 20px; font-size: 12px; color: #333; }
-    .table-container { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 15px; }
-    th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { color: #0d47a1; }
-    .devedor { color: #d32f2f; font-weight: bold; background: #fff9c4; }
-    .buttons { text-align: center; margin-top: 30px; }
-    .btn { padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px; margin: 0 5px; }
-    .btn-green { background: #4caf50; color: #fff; }
-    .btn-gray { background: #e0e0e0; color: #333; }
+    body { font-family: Arial, sans-serif; background: #ffffff; margin: 0; color: #111; }
+    .header { background: #dcedc8; padding: 12px 25px; border-bottom: 3px solid #8bc34a; }
+    .logo { color: #2e7d32; font-weight: 900; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+    .logo-box { background: #4caf50; color: white; padding: 2px 8px; border-radius: 4px; font-size: 14px; }
+    .sub { color: #555; font-size: 13px; margin-top: 3px; }
+    .container { max-width: 1000px; margin: 15px auto; background: #fff; padding: 15px; border: 1px solid #ccc; }
+    .info-bar { background: #e3f2fd; border: 1px solid #90caf9; padding: 10px 15px; margin-bottom: 15px; font-size: 12px; color: #0d47a1; }
+    .info-bar strong { background: #fff; padding: 2px 6px; border: 1px solid #90caf9; border-radius: 3px; }
+    .table-container { background: #f9f9f9; padding: 12px; border: 1px solid #ddd; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: #fff; }
+    th, td { border: 1px solid #e0e0e0; padding: 7px 10px; text-align: left; }
+    th { background: #f1f3f4; color: #333; font-weight: bold; }
+    .devedor { color: #d32f2f; font-weight: bold; background: #fffde7; }
+    .botoes-acao { margin-top: 20px; text-align: center; display: flex; justify-content: center; gap: 10px; }
+    .btn-pg { background: #2e7d32; color: white; border: none; padding: 10px 25px; font-weight: bold; font-br: 4px; cursor: pointer; border-radius: 4px; font-size: 13px;}
+    .btn-pg:hover { background: #1b5e20; }
   </style>
 </head>
 <body>
@@ -27,54 +27,114 @@
     <div class="logo"><span class="logo-box">S</span> PGMEI</div>
     <div class="sub">Programa Gerador de DAS do Microempreendedor Individual</div>
   </div>
+  
   <div class="container">
-    <div class="info-bar">CNPJ: <strong id="cnpj-display"></strong> Nome: <strong id="nome-display"></strong></div>
+    <div class="info-bar">
+      CNPJ: <strong id="cnpj-display"></strong> &nbsp;&nbsp;|&nbsp;&nbsp; Nome: <strong id="nome-display"></strong>
+    </div>
     
     <div class="table-container">
-      <div style="font-size: 13px; text-align: center; margin-bottom: 15px;">Informe o Ano-Calendário: <select><option>2026</option></select></div>
-      <p style="font-size: 13px;">Selecione o(s) período(s) de apuração:</p>
+      <div style="font-size: 12px; margin-bottom: 10px;">Informe o Ano-Calendário: <select style="padding: 2px 5px;"><option>2026</option></select></div>
+      <p style="font-size: 12px; font-weight: bold; color: #444;">Selecione o(s) período(s) de apuração:</p>
+      
       <table>
         <thead>
           <tr>
-            <th>Período de Apuração</th><th>Situação</th><th>Principal</th><th>Multa</th><th>Juros</th><th>Total</th><th>Data de Vencimento</th>
+            <th style="width: 30px;"></th>
+            <th>Período de Apuração</th>
+            <th>Situação</th>
+            <th>Principal</th>
+            <th>Multa</th>
+            <th>Juros</th>
+            <th>Total</th>
+            <th>Data de Vencimento</th>
+            <th>Data de Acolhimento</th>
           </tr>
         </thead>
-        <tbody id="tabela-pendencias"></tbody>
+        <tbody id="tabela-corpo">
+          <!-- Os meses fixos + dados da planilha serão inseridos aqui -->
+        </tbody>
       </table>
-      <div class="buttons">
-        <button class="btn btn-gray" onclick="window.location.href='index.html'">Voltar / Nova Consulta</button>
-        <button class="btn btn-green" onclick="irParaPagamento()">Pagar Online (PIX)</button>
+
+      <div class="botoes-acao">
+        <button class="btn-pg" onclick="window.location.href='pagamento.html'">Pagar Online (PIX)</button>
       </div>
     </div>
   </div>
 
   <script>
-    const dados = JSON.parse(localStorage.getItem('dadosEmpresaCNPJ360'));
-    if(dados) {
-      document.getElementById('cnpj-display').innerText = dados.empresa.cnpj;
-      document.getElementById('nome-display').innerText = dados.empresa.nome;
-      
-      const tb = document.getElementById('tabela-pendencias');
-      dados.pendencias.forEach(p => {
-         const row = document.createElement('tr');
-         if(p.situacao !== 'Pago') row.className = 'devedor';
-         row.innerHTML = `
-           <td><input type="checkbox" ${p.situacao !== 'Pago' ? 'checked' : ''}> ${p.competencia}</td>
-           <td>${p.situacao}</td>
-           <td>R$ ${p.valor.toFixed(2).replace('.', ',')}</td>
-           <td>R$ 0,00</td>
-           <td>R$ 0,00</td>
-           <td>R$ ${p.valor.toFixed(2).replace('.', ',')}</td>
-           <td>${p.vencimento}</td>
-         `;
-         tb.appendChild(row);
-      });
+    // Pega o CNPJ da URL (ex: pgmei.html?cnpj=68.362.936/0001-04)
+    const urlParams = new URLSearchParams(window.location.search);
+    const cnpjUrl = urlParams.get('cnpj');
+
+    const baseDemonstracao = JSON.parse(localStorage.getItem("baseDemonstracao") || "[]");
+    
+    // Se houver parâmetro na URL, busca direto da base do Excel
+    let dadosEmpresa = null;
+    if (cnpjUrl) {
+      const encontrados = baseDemonstracao.filter(item => item.cnpj.replace(/\D/g, "") === cnpjUrl.replace(/\D/g, ""));
+      if (encontrados.length > 0) {
+        dadosEmpresa = {
+          empresa: { cnpj: encontrados[0].cnpj, nome: encontrados[0].nome || "CLIENTE CADASTRADO" },
+          pendencias: encontrados.map((it, idx) => ({ id: idx+1, competencia: it.competencia, valor: it.valor, vencimento: it.vencimento, situacao: it.situacao }))
+        };
+        localStorage.setItem('dadosEmpresaCNPJ360', JSON.stringify(dadosEmpresa));
+      }
     }
 
-    function irParaPagamento() {
-      if(dados && dados.pendencias.length > 0) {
-        window.location.href = 'pagamento.html';
-      }
+    // Se não achou na URL, tenta pegar do navegador
+    if (!dadosEmpresa) {
+      dadosEmpresa = JSON.parse(localStorage.getItem('dadosEmpresaCNPJ360'));
+    }
+
+    if (dadosEmpresa) {
+      document.getElementById('cnpj-display').innerText = dadosEmpresa.empresa.cnpj;
+      document.getElementById('nome-display').innerText = dadosEmpresa.empresa.nome;
+
+      const mesesFixos = [
+        "Janeiro/2026", "Fevereiro/2026", "Março/2026", "Abril/2026", 
+        "Maio/2026", "Junho/2026", "Julho/2026", "Agosto/2026", 
+        "Setembro/2026", "Outubro/2026", "Novembro/2026", "Dezembro/2026"
+      ];
+
+      const tbody = document.getElementById('tabela-corpo');
+      
+      mesesFixos.forEach(mes => {
+        // Verifica se a planilha tem débito para este mês específico
+        const pendenciaMes = dadosEmpresa.pendencias.find(p => p.competencia.toLowerCase().includes(mes.toLowerCase().split('/')[0]));
+        
+        const tr = document.createElement('tr');
+        
+        if (pendenciaMes && pendenciaMes.situacao.toLowerCase() !== 'pago') {
+          tr.className = 'devedor';
+          tr.innerHTML = `
+            <td><input type="checkbox" checked></td>
+            <td>${mes}</td>
+            <td>Devedor</td>
+            <td>R$ ${Number(pendenciaMes.valor).toFixed(2).replace('.', ',')}</td>
+            <td>R$ 0,00</td>
+            <td>R$ 0,00</td>
+            <td>R$ ${Number(pendenciaMes.valor).toFixed(2).replace('.', ',')}</td>
+            <td>${pendenciaMes.vencimento}</td>
+            <td>${pendenciaMes.vencimento}</td>
+          `;
+        } else {
+          tr.innerHTML = `
+            <td><input type="checkbox" disabled></td>
+            <td>${mes}</td>
+            <td style="color: #666;">Não Optante</td>
+            <td>R$ 0,00</td>
+            <td>R$ 0,00</td>
+            <td>R$ 0,00</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+    } else {
+      document.querySelector('.container').innerHTML = "<h3 style='text-align:center; padding: 40px;'>Nenhum dado encontrado. Importe a planilha no painel admin ou acesse via link válido.</h3>";
     }
   </script>
 </body>
