@@ -9,20 +9,16 @@
     .header-das { display: flex; justify-content: space-between; border-bottom: 2px solid #1a237e; padding-bottom: 15px; margin-bottom: 20px; }
     .logo-simples { color: #8bc34a; font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 8px;}
     .title-das { color: #1a237e; font-size: 18px; text-align: right; }
-    
     .top-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
     .vencimento-box { border: 1px solid #1a237e; padding: 5px 10px; border-radius: 4px; font-size: 12px; height: fit-content;}
     .valor-box { background: #4caf50; color: #fff; padding: 10px 15px; text-align: right; border-radius: 4px; display: flex; gap: 15px; align-items: center;}
     .valor-box .lbl { font-size: 10px; font-weight: normal; text-align: right;}
     .valor-box .val { font-size: 22px; font-weight: bold; }
-
     .obs-box { border: 1px solid #1a237e; padding: 15px; border-radius: 4px; font-size: 12px; color: #333; margin-bottom: 20px;}
-    
     .pix-section { text-align: center; margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 30px;}
     .pix-title { color: #0d47a1; font-size: 22px; margin-bottom: 20px;}
-    .qr-container { width: 220px; height: 220px; border: 1px solid #ddd; border-radius: 10px; margin: 0 auto 20px; display: grid; place-items: center; }
+    .qr-container { width: 190px; height: 190px; border: 1px solid #ddd; border-radius: 10px; margin: 0 auto 20px; display: grid; place-items: center; background: #fafafa; font-weight: bold; color: #555;}
     .pix-code { background: #f9f9f9; border: 1px solid #ccc; border-radius: 4px; padding: 12px; font-size: 11px; word-break: break-all; text-align: left; margin-bottom: 15px; color: #555;}
-    
     .btn { padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .btn-blue { background: #0d47a1; color: #fff; }
     .btn-green { background: #2e7d32; color: #fff; width: 100%; font-size: 16px; margin-top: 15px; }
@@ -31,17 +27,14 @@
 <body>
   <div class="container">
     <div class="header-das">
-      <div class="logo-simples">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#8bc34a"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        SIMPLES NACIONAL
-      </div>
+      <div class="logo-simples">SIMPLES NACIONAL</div>
       <div class="title-das">Documento de Arrecadacao<br>do Simples Nacional</div>
     </div>
 
     <div class="top-info">
       <div class="vencimento-box">
         <div style="font-size:9px; color:#555;">Pagar este documento até</div>
-        <strong style="font-size:14px;" id="data-vencimento"></strong>
+        <strong style="font-size:14px;" id="data-vencimento">-</strong>
       </div>
       <div class="valor-box">
         <div class="lbl">Data de pagamento<br><strong style="font-size:14px;" id="data-hoje"></strong></div>
@@ -63,17 +56,15 @@
       <div class="pix-title">Pague com o PIX</div>
       
       <div class="qr-container">
-        <div id="loading" style="color: #666; font-size: 12px;">Gerando QR Code...</div>
-        <img id="qr-img" src="" style="width: 100%; border-radius: 10px; display: none;">
+        QR CODE SIMULADO
       </div>
 
       <div style="display: flex; gap: 10px;">
-        <div class="pix-code" id="pix-string"></div>
+        <div class="pix-code" id="pix-string">00020126580014br.gov.bcb.pix0136-simulacao-academica-pix-qrcode</div>
         <button class="btn btn-blue" onclick="copiarPix()">Copiar código PIX</button>
       </div>
 
       <button class="btn btn-green" onclick="window.location.href='obrigado.html'">Ja fiz o pagamento</button>
-      <div style="font-size: 10px; color: #888; margin-top: 10px;">PIX gerado. Escaneie o QR Code ou copie o código.</div>
     </div>
   </div>
 
@@ -82,29 +73,16 @@
     document.getElementById('data-hoje').innerText = hoje;
     document.getElementById('data-doc').innerText = hoje;
 
-    // Conecta com o server.js para buscar o PIX gerado
-    const pendenciaId = localStorage.getItem('pendenciaPagamento');
-    if(pendenciaId) {
-      fetch('/api/pagamento', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ pendenciaId: pendenciaId })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('data-vencimento').innerText = data.vencimento;
-        document.getElementById('valor-display').innerText = data.valor.replace('.', ',');
-        document.getElementById('qr-img').src = data.qrCode;
-        document.getElementById('qr-img').style.display = 'block';
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('pix-string').innerText = data.pix;
-      })
-      .catch(err => console.error(err));
+    const dados = JSON.parse(localStorage.getItem('dadosEmpresaCNPJ360'));
+    if(dados && dados.pendencias.length > 0) {
+      const p = dados.pendencias[0];
+      document.getElementById('data-vencimento').innerText = p.vencimento || "-";
+      document.getElementById('valor-display').innerText = Number(p.valor).toFixed(2).replace('.', ',');
     }
 
     function copiarPix() {
       navigator.clipboard.writeText(document.getElementById('pix-string').innerText);
-      alert('Código copiado!');
+      alert('Código PIX copiado!');
     }
   </script>
 </body>
