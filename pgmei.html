@@ -39,20 +39,16 @@
             <th>Período de Apuração</th><th>Situação</th><th>Principal</th><th>Multa</th><th>Juros</th><th>Total</th><th>Data de Vencimento</th>
           </tr>
         </thead>
-        <tbody id="tabela-pendencias">
-          <!-- Os dados virão da sua planilha via JS -->
-        </tbody>
+        <tbody id="tabela-pendencias"></tbody>
       </table>
       <div class="buttons">
-        <button class="btn btn-gray">Atualizar Valores</button>
-        <button class="btn btn-gray">Apurar/Gerar DAS</button>
+        <button class="btn btn-gray" onclick="window.location.href='index.html'">Voltar / Nova Consulta</button>
         <button class="btn btn-green" onclick="irParaPagamento()">Pagar Online (PIX)</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Recupera os dados da consulta feita na página inicial
     const dados = JSON.parse(localStorage.getItem('dadosEmpresaCNPJ360'));
     if(dados) {
       document.getElementById('cnpj-display').innerText = dados.empresa.cnpj;
@@ -76,9 +72,7 @@
     }
 
     function irParaPagamento() {
-      // Salva o ID da primeira pendência encontrada para gerar o PIX
       if(dados && dados.pendencias.length > 0) {
-        localStorage.setItem('pendenciaPagamento', dados.pendencias[0].id);
         window.location.href = 'pagamento.html';
       }
     }
