@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CNPJ360 | Consulta Empresarial</title>
-  <!-- Caminho do CSS corrigido aqui -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,7 +13,6 @@
     <a href="#inicio">Início</a>
     <a href="#como">Como funciona</a>
     <a href="#seguranca">Segurança</a>
-    <!-- Caminho do admin corrigido aqui -->
     <a href="admin.html">Administração</a>
   </nav>
 </header>
@@ -24,7 +22,7 @@
   <div class="hero-copy">
     <div class="eyebrow">PLATAFORMA ACADÊMICA • DEMONSTRAÇÃO</div>
     <h1>Consulte informações empresariais de forma <span>simples e organizada.</span></h1>
-    <p>Informe um CNPJ cadastrado na base de demonstração para visualizar dados e eventuais pendências.</p>
+    <p>Informe um CNPJ cadastrado na base para visualizar dados e eventuais pendências.</p>
     <form id="consultaForm" class="search-box">
       <input id="cnpj" maxlength="18" placeholder="00.000.000/0000-00" autocomplete="off">
       <button>Consultar CNPJ</button>
@@ -41,16 +39,6 @@
   </div>
 </section>
 
-<section id="resultado" class="section hidden">
-  <div class="section-head">
-    <div><div class="eyebrow">RESULTADO DA CONSULTA</div><h2>Dados da empresa</h2></div>
-    <button class="ghost" onclick="window.scrollTo({top:0,behavior:'smooth'})">Nova consulta</button>
-  </div>
-  <div id="empresaCard" class="company-card"></div>
-  <div class="section-head compact"><div><div class="eyebrow">SITUAÇÃO</div><h2>Pendências e competências</h2></div></div>
-  <div id="pendencias"></div>
-</section>
-
 <section id="como" class="section">
   <div class="eyebrow">COMO FUNCIONA</div>
   <h2>Consulta em poucos passos</h2>
@@ -62,23 +50,13 @@
 </section>
 
 <section id="seguranca" class="section security">
-  <div><div class="eyebrow">PROJETO ACADÊMICO</div><h2>Arquitetura preparada para automação</h2><p>Os dados podem ser importados pelo painel administrativo através de uma planilha Excel e armazenados em banco de dados.</p></div>
+  <div><div class="eyebrow">PROJETO ACADÊMICO</div><h2>Arquitetura preparada para automação</h2><p>Os dados podem ser importados pelo painel administrativo através de uma planilha Excel e armazenados no navegador.</p></div>
   <a class="button" href="admin.html">Abrir painel administrativo</a>
 </section>
 </main>
 
 <footer>CNPJ360 • Projeto acadêmico • Dados de demonstração</footer>
 
-<div id="paymentModal" class="modal hidden">
-  <div class="modal-content">
-    <button class="close" onclick="closeModal()">×</button>
-    <div class="eyebrow">REGULARIZAÇÃO</div>
-    <h2>Pagamento via PIX</h2>
-    <div id="payment"></div>
-  </div>
-</div>
-
-<!-- Caminho do JS corrigido aqui -->
 <script src="app.js"></script>
 </body>
 </html>
