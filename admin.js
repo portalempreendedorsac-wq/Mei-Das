@@ -6,12 +6,10 @@ function login(){
 
 function loadAll(){
   const base = JSON.parse(localStorage.getItem("baseDemonstracao") || "[]");
-  
-  // Agrupa por CNPJ único para listar cada cliente apenas uma vez na tabela
   const unicos = {};
   base.forEach(item => {
     if(item.cnpj && !unicos[item.cnpj]) {
-      unicos[item.cnpj] = item.nome || "Cliente sem Nome";
+      unicos[item.cnpj] = { nome: item.nome || "Cliente", abertura: item.dataAbertura || "01/01/2026" };
     }
   });
 
@@ -19,18 +17,17 @@ function loadAll(){
   const chaves = Object.keys(unicos);
 
   if(chaves.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhum cliente encontrado. Faça o upload da planilha acima.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhum cliente encontrado. Faça o upload da planilha.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = chaves.map(cnpj => {
-    const nome = unicos[cnpj];
-    // Cria o link direto preenchendo o CNPJ na URL do pgmei.html
+    const dados = unicos[cnpj];
     const linkCliente = `pgmei.html?cnpj=${encodeURIComponent(cnpj)}`;
     return `
       <tr>
         <td><b>${cnpj}</b></td>
-        <td><b>${nome}</b></td>
+        <td><b>${dados.nome}</b><br><small style="color:#666;">Abertura: ${dados.abertura}</small></td>
         <td>
           <a href="${linkCliente}" target="_blank" style="background: #008542; color: #ffcc29; padding: 6px 12px; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">
             🔗 Abrir Tela do Cliente
@@ -61,8 +58,9 @@ document.getElementById("uploadForm").addEventListener("submit", function(e) {
         return {
           cnpj: String(getCol(["cnpj"])).replace(/\D/g, ""),
           nome: getCol(["nome", "razão social", "razao social", "nome fantasia"]),
+          dataAbertura: getCol(["data abertura", "abertura", "data de abertura"]) || "01/01/2026",
           competencia: getCol(["competência", "competencia", "periodo", "período"]),
-          valor: parseFloat(String(getCol(["valor", "valor total"])).replace(/[^\d,.-]/g, "").replace(",", ".")) || 0,
+          valor: parseFloat(String(getCol(["valor", "valor total"])).replace(/[^\d,.-]/g, "").replace(",", ".")) || 86.05,
           vencimento: getCol(["vencimento", "data de vencimento"]),
           situacao: getCol(["situação", "situacao", "status"]) || "Devedor"
         };
@@ -72,10 +70,10 @@ document.getElementById("uploadForm").addEventListener("submit", function(e) {
       
       const m = document.getElementById("uploadMsg");
       m.style.color = "#008542";
-      m.textContent = `Sucesso! ${base.length} registros importados. Veja os links gerados abaixo.`;
+      m.textContent = `Sucesso! ${base.length} registros importados.`;
       loadAll();
     } catch (err) {
-      alert("Erro ao ler o arquivo Excel. Verifique se o formato está correto.");
+      alert("Erro ao ler o arquivo Excel.");
     }
   };
   reader.readAsArrayBuffer(file);
