@@ -2,25 +2,26 @@ const form = document.getElementById("consultaForm");
 const cnpjInput = document.getElementById("cnpj");
 const msg = document.getElementById("msg");
 
-form.addEventListener("submit", e => {
-  e.preventDefault();
-  msg.textContent = "Carregando dados...";
-  
-  const cnpjBuscado = cnpjInput.value.replace(/\D/g, "");
+// Se houver um input de CNPJ na tela inicial (caso queira usar para testes)
+if(form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const cnpjBuscado = cnpjInput.value.replace(/\D/g, "");
+    abrirCliente(cnpjBuscado);
+  });
+}
+
+function abrirCliente(cnpjBuscado) {
   const baseDemonstracao = JSON.parse(localStorage.getItem("baseDemonstracao") || "[]");
-  
-  // Procura o CNPJ na base carregada pela planilha
   const registrosEncontrados = baseDemonstracao.filter(item => item.cnpj === cnpjBuscado);
   
   if (registrosEncontrados.length === 0) {
-    msg.textContent = "Aviso: Importe a planilha no Painel Administrativo primeiro para carregar este CNPJ.";
+    if(msg) msg.textContent = "CNPJ não encontrado na base de dados.";
     return;
   }
   
-  msg.textContent = "";
-  
   const empresa = { 
-    cnpj: cnpjInput.value, 
+    cnpj: registrosEncontrados[0].cnpj, 
     nome: registrosEncontrados[0].nome || "Cliente Cadastrado" 
   };
   
@@ -34,5 +35,7 @@ form.addEventListener("submit", e => {
   
   const data = { empresa, pendencias };
   localStorage.setItem('dadosEmpresaCNPJ360', JSON.stringify(data));
-  window.location.href = 'pgmei.html';
-});
+  
+  // Redireciona para a tela do PGMEI passando o CNPJ na URL
+  window.location.href = `pgmei.html?cnpj=${encodeURIComponent(empresa.cnpj)}`;
+}
