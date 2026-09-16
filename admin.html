@@ -9,42 +9,55 @@
 <body class="admin-body">
 <div id="login" class="login-page">
   <div class="login-card">
-    <div class="brand"><span class="brand-mark">360</span><span>CNPJ<span>360</span></span></div>
+    <div class="brand"><span class="brand-mark">BR</span><span>REGULARIZAÇÃO<span>MEI</span></span></div>
     <h1>Painel administrativo</h1>
-    <p>Entre para importar e gerenciar a base de demonstração.</p>
-    <input id="user" placeholder="Usuário" value="admin">
-    <input id="password" type="password" placeholder="Senha" value="admin123">
-    <button class="button full" onclick="login()">Entrar</button>
-    <div id="loginMsg" class="message"></div>
-    <small>Acesso livre para demonstração no navegador.</small>
+    <p>Importe sua planilha Excel para gerar os links dos clientes.</p>
+    <button class="button full" onclick="login()">Acessar Painel</button>
   </div>
 </div>
 
 <div id="dashboard" class="hidden">
-  <header class="admin-top"><div class="brand"><span class="brand-mark">360</span><span>CNPJ<span>360</span></span></div><a href="index.html">Voltar ao site</a></header>
+  <header class="admin-top">
+    <div class="brand"><span class="brand-mark">BR</span><span>REGULARIZAÇÃO<span>MEI</span></span></div>
+    <a href="index.html" class="ghost">Início</a>
+  </header>
+  
   <main class="admin-main">
-    <div class="section-head"><div><div class="eyebrow">ADMINISTRAÇÃO</div><h1>Dashboard</h1></div></div>
-    <div id="stats" class="stats-grid"></div>
+    <div class="section-head"><div><div class="eyebrow">ADMINISTRAÇÃO</div><h1>Gerenciamento de Clientes</h1></div></div>
 
     <section class="admin-card">
       <div class="section-head compact"><div><div class="eyebrow">IMPORTAÇÃO</div><h2>Importar planilha Excel</h2></div></div>
       <form id="uploadForm" class="upload-area">
         <input type="file" name="arquivo" id="arquivo" accept=".xlsx,.xls,.csv" required>
-        <p>Selecione um arquivo <b>.xlsx</b> ou <b>.xls</b>.</p>
-        <button class="button">Importar dados</button>
+        <p>Selecione sua planilha com as colunas: <b>CNPJ, Nome, Competência, Valor, Vencimento</b></p>
+        <button class="button">Processar Planilha</button>
       </form>
       <div id="uploadMsg" class="message"></div>
-      <div class="template"><b>Colunas aceitas:</b> CNPJ, Nome, Competência, Valor, Vencimento, Situação.</div>
     </section>
 
     <section class="admin-card">
-      <div class="section-head compact"><div><div class="eyebrow">BASE DE DADOS</div><h2>Empresas cadastradas</h2></div><button class="ghost" onclick="loadAll()">Atualizar</button></div>
-      <div class="table-wrap"><table><thead><tr><th>CNPJ</th><th>Empresa</th><th>Situação</th><th>Pendências</th><th>Total</th></tr></thead><tbody id="table"></tbody></table></div>
+      <div class="section-head compact">
+        <div><div class="eyebrow">LINKS GERADOS</div><h2>Clientes Prontos para Envio</h2></div>
+        <button class="ghost" onclick="loadAll()">Atualizar Lista</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>CNPJ</th>
+              <th>Razão Social / Nome</th>
+              <th>Ação para Apresentação / Envio</th>
+            </tr>
+          </thead>
+          <tbody id="table">
+            <tr><td colspan="3" style="text-align:center;">Nenhuma planilha importada ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 </div>
 
-<!-- Biblioteca SheetJS para ler Excel direto no navegador -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="admin.js"></script>
 </body>
