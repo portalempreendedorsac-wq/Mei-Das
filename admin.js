@@ -6,20 +6,38 @@ function login(){
 
 function loadAll(){
   const base = JSON.parse(localStorage.getItem("baseDemonstracao") || "[]");
-  const total = base.reduce((acc, curr) => acc + curr.valor, 0);
   
-  document.getElementById("stats").innerHTML=`
-    <div class="stat-box"><small>Registros carregados</small><strong>${base.length}</strong></div>
-    <div class="stat-box"><small>Total pendente</small><strong>R$ ${total.toFixed(2).replace(".",",")}</strong></div>`;
-    
-  document.getElementById("table").innerHTML = base.map(x => `
-    <tr>
-      <td>${x.cnpj}</td>
-      <td>${x.nome || "-"}</td>
-      <td>${x.situacao}</td>
-      <td>1</td>
-      <td>R$ ${x.valor.toFixed(2).replace(".",",")}</td>
-    </tr>`).join("");
+  // Agrupa por CNPJ único para listar cada cliente apenas uma vez na tabela
+  const unicos = {};
+  base.forEach(item => {
+    if(item.cnpj && !unicos[item.cnpj]) {
+      unicos[item.cnpj] = item.nome || "Cliente sem Nome";
+    }
+  });
+
+  const tbody = document.getElementById("table");
+  const chaves = Object.keys(unicos);
+
+  if(chaves.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhum cliente encontrado. Faça o upload da planilha acima.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = chaves.map(cnpj => {
+    const nome = unicos[cnpj];
+    // Cria o link direto preenchendo o CNPJ na URL do pgmei.html
+    const linkCliente = `pgmei.html?cnpj=${encodeURIComponent(cnpj)}`;
+    return `
+      <tr>
+        <td><b>${cnpj}</b></td>
+        <td><b>${nome}</b></td>
+        <td>
+          <a href="${linkCliente}" target="_blank" style="background: #008542; color: #ffcc29; padding: 6px 12px; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">
+            🔗 Abrir Tela do Cliente
+          </a>
+        </td>
+      </tr>`;
+  }).join("");
 }
 
 document.getElementById("uploadForm").addEventListener("submit", function(e) {
@@ -29,32 +47,36 @@ document.getElementById("uploadForm").addEventListener("submit", function(e) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, {type: 'array'});
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(worksheet, {defval: ""});
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(worksheet, {defval: ""});
 
-    const base = json.map(row => {
-      const getCol = (names) => {
-        const key = Object.keys(row).find(k => names.includes(k.trim().toLowerCase()));
-        return key ? row[key] : "";
-      };
-      return {
-        cnpj: String(getCol(["cnpj"])).replace(/\D/g, ""),
-        nome: getCol(["nome", "razão social", "razao social", "nome fantasia"]),
-        competencia: getCol(["competência", "competencia", "periodo", "período"]),
-        valor: parseFloat(String(getCol(["valor", "valor total"])).replace(/[^\d,.-]/g, "").replace(",", ".")) || 0,
-        vencimento: getCol(["vencimento", "data de vencimento"]),
-        situacao: getCol(["situação", "situacao", "status"]) || "Pendente"
-      };
-    }).filter(item => item.cnpj !== "");
+      const base = json.map(row => {
+        const getCol = (names) => {
+          const key = Object.keys(row).find(k => names.includes(k.trim().toLowerCase()));
+          return key ? row[key] : "";
+        };
+        return {
+          cnpj: String(getCol(["cnpj"])).replace(/\D/g, ""),
+          nome: getCol(["nome", "razão social", "razao social", "nome fantasia"]),
+          competencia: getCol(["competência", "competencia", "periodo", "período"]),
+          valor: parseFloat(String(getCol(["valor", "valor total"])).replace(/[^\d,.-]/g, "").replace(",", ".")) || 0,
+          vencimento: getCol(["vencimento", "data de vencimento"]),
+          situacao: getCol(["situação", "situacao", "status"]) || "Devedor"
+        };
+      }).filter(item => item.cnpj !== "");
 
-    localStorage.setItem("baseDemonstracao", JSON.stringify(base));
-    
-    const m = document.getElementById("uploadMsg");
-    m.style.color = "#15803d";
-    m.textContent = `Importação concluída: ${base.length} registros salvos no navegador!`;
-    loadAll();
+      localStorage.setItem("baseDemonstracao", JSON.stringify(base));
+      
+      const m = document.getElementById("uploadMsg");
+      m.style.color = "#008542";
+      m.textContent = `Sucesso! ${base.length} registros importados. Veja os links gerados abaixo.`;
+      loadAll();
+    } catch (err) {
+      alert("Erro ao ler o arquivo Excel. Verifique se o formato está correto.");
+    }
   };
   reader.readAsArrayBuffer(file);
 });
