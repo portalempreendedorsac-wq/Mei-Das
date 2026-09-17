@@ -10,50 +10,49 @@
     .logo-box { background: #4caf50; color: white; padding: 2px 8px; border-radius: 4px; font-size: 14px; }
     .sub { color: #555; font-size: 13px; margin-top: 3px; }
     
-    /* TELA DE LOADING INICIAL */
-    #loading-screen {
-      position: fixed; inset: 0; background: #fff; z-index: 999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    }
-    .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #4caf50; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;}
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
     .container { max-width: 1000px; margin: 15px auto; background: #fff; padding: 15px; border: 1px solid #ccc; }
-    .info-bar { background: #e3f2fd; border: 1px solid #90caf9; padding: 10px 15px; margin-bottom: 15px; font-size: 12px; color: #0d47a1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
-    .info-bar strong { background: #fff; padding: 2px 6px; border: 1px solid #90caf9; border-radius: 3px; color: #000; }
+    
+    /* BARRA DE EDIÇÃO RÁPIDA PARA VOCÊ AJUSTAR ANTES DE MANDAR */
+    .info-bar { background: #e3f2fd; border: 1px solid #90caf9; padding: 10px 15px; margin-bottom: 15px; font-size: 12px; color: #0d47a1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+    .info-bar input { padding: 4px 6px; border: 1px solid #90caf9; border-radius: 3px; font-size: 12px; font-weight: bold; }
+    .btn-salvar { background: #0d47a1; color: white; border: none; padding: 5px 12px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 11px; }
+
     .table-container { background: #f9f9f9; padding: 12px; border: 1px solid #ddd; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: #fff; }
     th, td { border: 1px solid #e0e0e0; padding: 7px 10px; text-align: left; }
     th { background: #f1f3f4; color: #333; font-weight: bold; }
     .devedor { color: #d32f2f; font-weight: bold; background: #fffde7; }
     .inativo { color: #888; background: #f5f5f5; }
-    .botoes-acao { margin-top: 20px; text-align: center; display: flex; justify-content: center; gap: 10px; }
+    .botoes-acao { margin-top: 20px; text-align: center; }
     .btn-pg { background: #2e7d32; color: white; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 13px;}
     .btn-pg:hover { background: #1b5e20; }
-    
-    /* RELÓGIO PROFISSIONAL */
     .footer-relogio { text-align: center; margin-top: 25px; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 10px; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <!-- TELA DE CARREGAMENTO COM O CNPJ DO CLIENTE -->
-  <div id="loading-screen">
-    <div class="spinner"></div>
-    <h2 style="color: #2e7d32; margin-bottom: 5px;">Carregando dados da empresa...</h2>
-    <p id="loading-cnpj" style="color: #555; font-size: 14px; font-weight: bold;"></p>
-    <p style="color: #888; font-size: 12px;">Estabelecendo conexão segura com a base de dados</p>
-  </div>
-
   <div class="header">
-    <div class="logo"><span class="logo-box">S</span> PGMEI</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <div class="logo"><span class="logo-box">S</span> PGMEI</div>
+      <nav style="display: flex; gap: 20px; font-size: 13px; font-weight: bold;">
+        <a href="#institucional" style="color: #2e7d32; text-decoration: none;">Institucional</a>
+        <a href="#acessibilidade" style="color: #2e7d32; text-decoration: none;">Acessibilidade</a>
+        <a href="#participe" style="color: #2e7d32; text-decoration: none;">Participe</a>
+      </nav>
+    </div>
     <div class="sub">Programa Gerador de DAS do Microempreendedor Individual</div>
   </div>
   
   <div class="container">
     <div class="info-bar">
-      <div>CNPJ: <strong id="cnpj-display">-</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Nome: <strong id="nome-display">-</strong></div>
-      <div>Data Abertura: <strong id="abertura-display">-</strong></div>
+      <div>
+        CNPJ: <input type="text" id="input-cnpj" value="69.086.804/0001-51" style="width: 140px;"> &nbsp;|&nbsp; 
+        Nome: <input type="text" id="input-nome" value="DAVID LUCAS SILVA SANTANA SANTOS" style="width: 220px;">
+      </div>
+      <div>
+        Abertura: <input type="text" id="input-abertura" value="01/01/2026" style="width: 80px;">
+        <button class="btn-salvar" onclick="atualizarTabela()">Atualizar</button>
+      </div>
     </div>
     
     <div class="table-container">
@@ -81,7 +80,6 @@
         <button class="btn-pg" onclick="window.location.href='pagamento.html'">Pagar Online (PIX)</button>
       </div>
       
-      <!-- RELÓGIO AO VIVO -->
       <div class="footer-relogio">
         🕒 Horário oficial de Brasília: <span id="relogio">--:--:--</span> | Sistema de Regularização MEI
       </div>
@@ -89,125 +87,58 @@
   </div>
 
   <script>
-    // Relógio em tempo real
     setInterval(() => {
       const agora = new Date();
       document.getElementById('relogio').innerText = agora.toLocaleTimeString('pt-BR');
     }, 1000);
 
-    // Simula o carregamento e leitura da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const cnpjUrl = urlParams.get('cnpj');
-    if(cnpjUrl) {
-      document.getElementById('loading-cnpj').innerText = "CNPJ: " + cnpjUrl;
+    window.onload = function() {
+      atualizarTabela();
     }
 
-    setTimeout(() => {
-      document.getElementById('loading-screen').style.display = 'none';
-      carregarDadosCliente();
-    }, 1500); // Tela de loading de 1.5 segundos para dar efeito profissional
+    function atualizarTabela() {
+      const aberturaStr = document.getElementById('input-abertura').value;
+      let mesAbertura = 1;
+      if(aberturaStr.includes('/')) {
+        const partes = aberturaStr.split('/');
+        if(partes.length >= 2) mesAbertura = parseInt(partes[1], 10);
+      }
 
-    function carregarDadosCliente() {
-      const baseDemonstracao = JSON.parse(localStorage.getItem("baseDemonstracao") || "[]");
-      let dadosCliente = null;
+      const mesesFixos = [
+        { nome: "Janeiro/2026", num: 1 }, { nome: "Fevereiro/2026", num: 2 },
+        { nome: "Março/2026", num: 3 }, { nome: "Abril/2026", num: 4 },
+        { nome: "Maio/2026", num: 5 }, { nome: "Junho/2026", num: 6 },
+        { nome: "Julho/2026", num: 7 }, { nome: "Agosto/2026", num: 8 },
+        { nome: "Setembro/2026", num: 9 }, { nome: "Outubro/2026", num: 10 },
+        { nome: "Novembro/2026", num: 11 }, { nome: "Dezembro/2026", num: 12 }
+      ];
 
-      if (cnpjUrl) {
-        const cnpjLimpo = cnpjUrl.replace(/\D/g, "");
-        const encontrados = baseDemonstracao.filter(item => String(item.cnpj).replace(/\D/g, "") === cnpjLimpo);
-        if (encontrados.length > 0) {
-          dadosCliente = {
-            cnpj: encontrados[0].cnpj,
-            nome: encontrados[0].nome || "CLIENTE CADASTRADO",
-            dataAbertura: encontrados[0].dataAbertura || encontrados[0].abertura || "01/01/2026", // Lê a data de abertura da planilha
-            pendencias: encontrados
-          };
+      const dataHoje = new Date().toLocaleDateString('pt-BR');
+      const tbody = document.getElementById('tabela-corpo');
+      tbody.innerHTML = "";
+
+      mesesFixos.forEach(m => {
+        const tr = document.createElement('tr');
+        if (m.num < mesAbertura) {
+          tr.className = 'inativo';
+          tr.innerHTML = `
+            <td><input type="checkbox" disabled></td>
+            <td>${m.nome}</td>
+            <td>Não Optante (Antes Abertura)</td>
+            <td>R$ 0,00</td><td>R$ 0,00</td><td>R$ 0,00</td><td>-</td><td>-</td><td>-</td>
+          `;
+        } else {
+          tr.className = 'devedor';
+          tr.innerHTML = `
+            <td><input type="checkbox" checked></td>
+            <td>${m.nome}</td>
+            <td>Devedor</td>
+            <td>R$ 86,05</td><td>R$ 2,87</td><td>R$ 2,63</td><td>R$ 91,55</td>
+            <td>${dataHoje}</td><td>${dataHoje}</td>
+          `;
         }
-      }
-
-      if (!dadosCliente && baseDemonstracao.length > 0) {
-        dadosCliente = {
-          cnpj: baseDemonstracao[0].cnpj,
-          nome: baseDemonstracao[0].nome || "CLIENTE CADASTRADO",
-          dataAbertura: baseDemonstracao[0].dataAbertura || "01/01/2026",
-          pendencias: baseDemonstracao
-        };
-      }
-
-      if (dadosCliente) {
-        document.getElementById('cnpj-display').innerText = dadosCliente.cnpj;
-        document.getElementById('nome-display').innerText = dadosCliente.nome;
-        document.getElementById('abertura-display').innerText = dadosCliente.dataAbertura;
-
-        // Converte a data de abertura para número do mês (Ex: "15/03/2026" vira mês 3)
-        let mesAbertura = 1;
-        if(dadosCliente.dataAbertura && dadosCliente.dataAbertura.includes('/')) {
-          const partes = dadosCliente.dataAbertura.split('/');
-          if(partes.length >= 2) mesAbertura = parseInt(partes[1], 10);
-        }
-
-        const mesesFixos = [
-          { nome: "Janeiro/2026", num: 1 },
-          { nome: "Fevereiro/2026", num: 2 },
-          { nome: "Março/2026", num: 3 },
-          { nome: "Abril/2026", num: 4 },
-          { nome: "Maio/2026", num: 5 },
-          { nome: "Junho/2026", num: 6 },
-          { nome: "Julho/2026", num: 7 },
-          { nome: "Agosto/2026", num: 8 },
-          { nome: "Setembro/2026", num: 9 },
-          { nome: "Outubro/2026", num: 10 },
-          { nome: "Novembro/2026", num: 11 },
-          { nome: "Dezembro/2026", num: 12 }
-        ];
-
-        // Data de vencimento sendo a data de hoje formatada
-        const dataHoje = new Date().toLocaleDateString('pt-BR');
-
-        const tbody = document.getElementById('tabela-corpo');
-        tbody.innerHTML = "";
-
-        mesesFixos.forEach(m => {
-          const tr = document.createElement('tr');
-          
-          // Se o mês for anterior à data de abertura da empresa, fica Inativo
-          if (m.num < mesAbertura) {
-            tr.className = 'inativo';
-            tr.innerHTML = `
-              <td><input type="checkbox" disabled></td>
-              <td>${m.nome}</td>
-              <td>Não Optante (Antes Abertura)</td>
-              <td>R$ 0,00</td><td>R$ 0,00</td><td>R$ 0,00</td><td>-</td><td>-</td><td>-</td>
-            `;
-          } else {
-            // Meses ativos (Procura na planilha ou define padrão devedor)
-            const nomeMesAbrev = m.nome.split('/')[0].toLowerCase();
-            const pendenciaMes = dadosCliente.pendencias.find(p => String(p.competencia).toLowerCase().includes(nomeMesAbrev));
-            const valorDevido = pendenciaMes ? Number(pendenciaMes.valor) : 86.05; // Valor padrão MEI se não especificado
-
-            tr.className = 'devedor';
-            tr.innerHTML = `
-              <td><input type="checkbox" checked></td>
-              <td>${m.nome}</td>
-              <td>Devedor</td>
-              <td>R$ ${valorDevido.toFixed(2).replace('.', ',')}</td>
-              <td>R$ 2,87</td>
-              <td>R$ 2,63</td>
-              <td>R$ ${(valorDevido + 5.50).toFixed(2).replace('.', ',')}</td>
-              <td>${dataHoje}</td>
-              <td>${dataHoje}</td>
-            `;
-          }
-          tbody.appendChild(tr);
-        });
-      } else {
-        document.getElementById('loading-screen').style.display = 'flex';
-        document.getElementById('loading-screen').innerHTML = `
-          <div style="padding: 20px;">
-            <h3 style="color: #d32f2f;">Nenhum dado encontrado.</h3>
-            <p>Importe sua planilha no painel administrativo primeiro.</p>
-            <button class="btn-pg" onclick="window.location.href='admin.html'">Ir para Painel Admin</button>
-          </div>`;
-      }
+        tbody.appendChild(tr);
+      });
     }
   </script>
 </body>
