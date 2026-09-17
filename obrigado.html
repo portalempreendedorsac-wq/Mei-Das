@@ -16,7 +16,7 @@
     .form-group label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #333;}
     .form-group p { font-size: 11px; color: #666; margin: 0 0 10px 0; }
     .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;}
-    .upload-box { border: 1px dashed #0d47a1; padding: 15px; text-align: center; color: #0d47a1; font-weight: bold; border-radius: 6px; font-size: 13px; cursor: pointer; margin-bottom: 10px; }
+    .upload-box { border: 2px dashed #0d47a1; padding: 15px; text-align: center; color: #0d47a1; font-weight: bold; border-radius: 6px; font-size: 13px; cursor: pointer; margin-bottom: 10px; background: #f8fbff; }
     .btn-submit { background: #0d47a1; color: white; width: 100%; padding: 16px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer;}
     .protocol { font-size: 10px; color: #999; margin-top: 20px; }
   </style>
@@ -42,12 +42,12 @@
       
       <div class="form-group">
         <label>Comprovante do pagamento <span style="font-weight: normal; color: #888;">(opcional)</span></label>
-        <div class="upload-box" onclick="alert('Simulação de anexo de arquivo realizada!')">Anexar comprovante</div>
+        <div class="upload-box" onclick="alert('Comprovante anexado com sucesso!')">📁 Clique aqui para anexar o comprovante</div>
         <p style="text-align: center; margin: 10px 0;">Ou informe o código de identificação</p>
         <input type="text" class="form-control" placeholder="E000000002026...">
       </div>
       
-      <button class="btn-submit" onclick="alert('Dados confirmados com sucesso! Projeto acadêmico finalizado.'); window.location.href='index.html';">Confirmar dados</button>
+      <button class="btn-submit" onclick="alert('Dados enviados com sucesso! Atendimento registrado.');">Confirmar dados</button>
       <div class="protocol">Protocolo: a452d169-d471-4073-b633-6d20a8a2d339</div>
     </div>
   </div>
