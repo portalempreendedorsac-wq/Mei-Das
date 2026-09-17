@@ -2,87 +2,37 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Documento de Arrecadação</title>
+  <title>Pagamento via PIX</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; }
-    .header-das { display: flex; justify-content: space-between; border-bottom: 2px solid #1a237e; padding-bottom: 15px; margin-bottom: 20px; }
-    .logo-simples { color: #8bc34a; font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 8px;}
-    .title-das { color: #1a237e; font-size: 18px; text-align: right; }
-    .top-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .vencimento-box { border: 1px solid #1a237e; padding: 5px 10px; border-radius: 4px; font-size: 12px; height: fit-content;}
-    .valor-box { background: #4caf50; color: #fff; padding: 10px 15px; text-align: right; border-radius: 4px; display: flex; gap: 15px; align-items: center;}
-    .valor-box .lbl { font-size: 10px; font-weight: normal; text-align: right;}
-    .valor-box .val { font-size: 22px; font-weight: bold; }
-    .obs-box { border: 1px solid #1a237e; padding: 15px; border-radius: 4px; font-size: 12px; color: #333; margin-bottom: 20px;}
-    .pix-section { text-align: center; margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 30px;}
-    .pix-title { color: #0d47a1; font-size: 22px; margin-bottom: 20px;}
-    .qr-container { width: 190px; height: 190px; border: 1px solid #ddd; border-radius: 10px; margin: 0 auto 20px; display: grid; place-items: center; background: #fafafa; font-weight: bold; color: #555;}
-    .pix-code { background: #f9f9f9; border: 1px solid #ccc; border-radius: 4px; padding: 12px; font-size: 11px; word-break: break-all; text-align: left; margin-bottom: 15px; color: #555;}
-    .btn { padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+    .pix-title { color: #0d47a1; font-size: 22px; margin-bottom: 20px; font-weight: bold;}
+    .qr-box { background: #f9f9f9; border: 2px dashed #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; color: #555; }
+    .pix-code { background: #f1f3f4; border: 1px solid #ccc; border-radius: 4px; padding: 12px; font-size: 11px; word-break: break-all; text-align: left; margin-bottom: 15px; color: #333;}
+    .btn { padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; margin-top: 10px; }
     .btn-blue { background: #0d47a1; color: #fff; }
-    .btn-green { background: #2e7d32; color: #fff; width: 100%; font-size: 16px; margin-top: 15px; }
+    .btn-green { background: #2e7d32; color: #fff; }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header-das">
-      <div class="logo-simples">SIMPLES NACIONAL</div>
-      <div class="title-das">Documento de Arrecadacao<br>do Simples Nacional</div>
+    <div class="pix-title">Pague com o PIX para Regularizar</div>
+    
+    <div class="qr-box">
+      [ QR CODE PIX DE COBRANÇA ]<br>
+      <span style="font-size: 13px; color: #2e7d32;">Valor Total: R$ 91,55</span>
     </div>
 
-    <div class="top-info">
-      <div class="vencimento-box">
-        <div style="font-size:9px; color:#555;">Pagar este documento até</div>
-        <strong style="font-size:14px;" id="data-vencimento">-</strong>
-      </div>
-      <div class="valor-box">
-        <div class="lbl">Data de pagamento<br><strong style="font-size:14px;" id="data-hoje"></strong></div>
-        <div style="border-left:1px solid rgba(255,255,255,0.3); height: 30px;"></div>
-        <div>
-          <div class="lbl">Valor Total do Documento</div>
-          <div class="val">R$ <span id="valor-display">0,00</span></div>
-        </div>
-      </div>
-    </div>
+    <div class="pix-code" id="pix-string">00020126580014br.gov.bcb.pix0136-chave-pix-exemplo-regularizacao-mei-9155</div>
+    <button class="btn btn-blue" onclick="copiarPix()">Copiar código PIX</button>
 
-    <div class="obs-box">
-      <div style="font-size:9px; color:#555; margin-bottom:5px;">Observacoes</div>
-      <strong style="font-size:14px;">Tributos (R$): INSS 93,09 ICMS 1,00 ISS 0,00 PGMEI(Versao:3.17.0)</strong><br><br>
-      Data Documento: <span id="data-doc"></span>
-    </div>
-
-    <div class="pix-section">
-      <div class="pix-title">Pague com o PIX</div>
-      
-      <div class="qr-container">
-        QR CODE SIMULADO
-      </div>
-
-      <div style="display: flex; gap: 10px;">
-        <div class="pix-code" id="pix-string">00020126580014br.gov.bcb.pix0136-simulacao-academica-pix-qrcode</div>
-        <button class="btn btn-blue" onclick="copiarPix()">Copiar código PIX</button>
-      </div>
-
-      <button class="btn btn-green" onclick="window.location.href='obrigado.html'">Ja fiz o pagamento</button>
-    </div>
+    <button class="btn btn-green" onclick="window.location.href='obrigado.html'">Já fiz o pagamento</button>
   </div>
 
   <script>
-    const hoje = new Date().toLocaleDateString('pt-BR');
-    document.getElementById('data-hoje').innerText = hoje;
-    document.getElementById('data-doc').innerText = hoje;
-
-    const dados = JSON.parse(localStorage.getItem('dadosEmpresaCNPJ360'));
-    if(dados && dados.pendencias.length > 0) {
-      const p = dados.pendencias[0];
-      document.getElementById('data-vencimento').innerText = p.vencimento || "-";
-      document.getElementById('valor-display').innerText = Number(p.valor).toFixed(2).replace('.', ',');
-    }
-
     function copiarPix() {
       navigator.clipboard.writeText(document.getElementById('pix-string').innerText);
-      alert('Código PIX copiado!');
+      alert('Código PIX copiado com sucesso!');
     }
   </script>
 </body>
